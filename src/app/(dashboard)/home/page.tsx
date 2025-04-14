@@ -2,8 +2,29 @@ import AttackDuration from "@/app/(dashboard)/home/_components/attack-duration";
 import AttackVolume from "@/app/(dashboard)/home/_components/attack-volume";
 import DdosAttacks from "@/app/(dashboard)/home/_components/ddos-attacks";
 import MitigateAttacks from "@/app/(dashboard)/home/_components/mitigate-attacks";
+import {
+  getCountChart,
+  getDuration,
+  getSumLrl,
+  getSumPps,
+  getTopFiveLrl,
+} from "@/services/get-apis";
 
-export default function Page() {
+export default async function Page() {
+  const [
+    countChartData,
+    getSumPpsData,
+    getSumLrlData,
+    getTopFiveLrlData,
+    getDurationData,
+  ] = await Promise.all([
+    getCountChart(),
+    getSumPps(),
+    getSumLrl(),
+    getTopFiveLrl(),
+    getDuration(),
+  ]);
+
   return (
     <div className="space-y-3 h-full">
       <div className="w-1/2">
@@ -17,15 +38,18 @@ export default function Page() {
       </div>
       <div className="mt-6 col-span-2 grid grid-cols-2 gap-3 max-h-[310px] h-full">
         <div className="flex w-full">
-          <MitigateAttacks />
-          <DdosAttacks />
+          <MitigateAttacks countChartData={countChartData} />
+          <DdosAttacks
+            getSumPpsData={getSumPpsData}
+            getSumLrlData={getSumLrlData}
+          />
         </div>
         <div className="max-w-1/2">
-          <AttackVolume />
+          <AttackVolume getTopFiveLrlData={getTopFiveLrlData} />
         </div>
       </div>
       <div className="max-h-[108px] w-1/2 h-full">
-        <AttackDuration />
+        <AttackDuration getDurationData={getDurationData} />
       </div>
     </div>
   );

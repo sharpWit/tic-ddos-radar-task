@@ -37,3 +37,12 @@ const second = parts.find((p) => p.type === "second")?.value ?? "";
 // Final
 export const finalDateString = `${weekday} - ${year}/${month}/${day}`;
 export const finalTimeString = `${hour}:${minute}:${second}`;
+
+// Utility function to convert seconds to days, hours, minutes
+export const formatDuration = (seconds: number) => {
+  const days = Math.floor(seconds / (3600 * 24));
+  const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+
+  return { days, hours, minutes };
+};
